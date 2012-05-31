@@ -157,6 +157,7 @@ CheckoutController.class_eval do
       end
 
       flash[:notice] = I18n.t(:order_processed_successfully)
+      flash[:commerce_tracking] = "true"
       redirect_to completion_route
 
     else
@@ -264,7 +265,7 @@ CheckoutController.class_eval do
              :tax               => ((order.adjustments.map { |a| a.amount if ( a.source_type == 'Order' && a.label == 'Tax') }.compact.sum) * 100 ).to_i,
              :shipping          => ((order.adjustments.map { |a| a.amount if a.source_type == 'Shipment' }.compact.sum) * 100 ).to_i,
              :money             => (order.total * 100 ).to_i }
-             
+
       # add correct tax amount by subtracting subtotal and shipping otherwise tax = 0 -> need to check adjustments.map
       opts[:tax] = (order.total*100).to_i - opts.slice(:subtotal, :shipping).values.sum
 
